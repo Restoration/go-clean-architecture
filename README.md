@@ -93,7 +93,7 @@ DI されてきた Repository や GateWay などはここで扱う。
 
 Port は Input Boundary と Output Boundary の役割を持っており、interface として定義している。
 GateWay や Repository の抽象。
-アプリケーションロジックに対する
+アプリケーションロジックに対する入り口的な役割をしている。
 
 ### Infrastructure
 
@@ -129,7 +129,7 @@ Repository は内部データ管理をする。
 
 #### db
 
-マイグレーションやシードなどの SQL などはこちらに格納。
+マイグレーションやシードなどの SQLはこちらに格納。
 
 #### DAO
 
