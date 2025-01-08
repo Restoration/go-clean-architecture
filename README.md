@@ -17,8 +17,12 @@ $ make seed
 
 ## クリーンアーキテクチャ
 
+[ca](https://github.com/Restoration/go-clean-architecture/blob/main/docs/images/ca.jpg)
+
 クリーンアーキテクチャにおいて肝心な図はこちら。
 ドーナツ状になっている図はあくまで抽象的な部分を示しており、さらに細分化した図はこちらになる。
+
+[ca2](https://github.com/Restoration/go-clean-architecture/blob/main/docs/images/ca-2.jpg)
 
 この図の中で出てくる`<I>`とは interface を指し示しており、`<DS>`とは DataStructure を意味している。
 
