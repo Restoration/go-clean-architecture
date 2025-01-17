@@ -17,11 +17,13 @@ func (repo *StubAWSGateway) CreatePreSignedURL(bucket string, storageKey int) (u
 	tracer := otel.Tracer("go-clean-app.gateway")
 	_, span := tracer.Start(context.Background(), "StubAWSGateway.CreatePreSignedURL")
 	defer span.End()
-	// 何らかの処理
+	// ファイルの署名処理
 	// 完了後Spanに記録
 	span.SetAttributes(
 		attribute.String("aws.service", "s3"),
 		attribute.String("aws.operation", "Presigned URL"),
+		attribute.String("aws.region", "us-east-1"),
+		attribute.String("aws.request_id", "XXXXXXXXXXXX"),
 		attribute.String("aws.bucket", bucket),
 		attribute.Int("aws.storageKey", storageKey),
 	)
