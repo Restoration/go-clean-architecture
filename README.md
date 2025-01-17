@@ -33,8 +33,8 @@ http://localhost:16686
 ```
 
 ## ドキュメント
-- [クリーンアーキテクチャ]()
-- [分散トレーシング]()
+- [クリーンアーキテクチャ](https://github.com/Restoration/go-clean-architecture/blob/main/docs/clean_architecture.md)
+- [分散トレーシング](https://github.com/Restoration/go-clean-architecture/blob/main/docs/distributed_tracing.md)
 
 ## Author
 
