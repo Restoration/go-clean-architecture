@@ -32,11 +32,12 @@ func afterQuery(db *gorm.DB) {
 	if !ok {
 		return
 	}
-
 	span := spanInterface.(trace.Span)
 	span.SetAttributes(
 		attribute.Int("db.rows_affected", int(db.RowsAffected)), // 影響を受けた行数
-		attribute.String("db.error", db.Error.Error()),          // エラー情報（ある場合）
 	)
+	if db.Error != nil {
+		span.SetAttributes(attribute.String("db.error", db.Error.Error()))
+	}
 	span.End()
 }
