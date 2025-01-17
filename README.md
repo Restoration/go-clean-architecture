@@ -10,6 +10,12 @@ Go 言語によるRESTFul APIの実装。
 - ユニットテスト
 
 
+実装の詳細については以下
+
+- [クリーンアーキテクチャ](https://github.com/Restoration/go-clean-architecture/blob/main/docs/clean_architecture.md)
+- [分散トレーシング](https://github.com/Restoration/go-clean-architecture/blob/main/docs/distributed_tracing.md)
+
+
 ## 立ち上げ方法
 
 事前に Docker をインストールしください。
@@ -24,17 +30,13 @@ $ make seed
 以下でレスポンス確認
 
 ```
-http://localhost:8080/users
+http://localhost:8080/v1/users
 ```
 
 モニタリング（jaeger）
 ```
 http://localhost:16686
 ```
-
-## ドキュメント
-- [クリーンアーキテクチャ](https://github.com/Restoration/go-clean-architecture/blob/main/docs/clean_architecture.md)
-- [分散トレーシング](https://github.com/Restoration/go-clean-architecture/blob/main/docs/distributed_tracing.md)
 
 ## Author
 

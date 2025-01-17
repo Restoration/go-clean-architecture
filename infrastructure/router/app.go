@@ -1,6 +1,7 @@
 package router
 
 import (
+	"go-clean-app/config"
 	"go-clean-app/di"
 	"go-clean-app/infrastructure/middleware"
 
@@ -9,7 +10,10 @@ import (
 )
 
 func App(router *gin.Engine, db *gorm.DB) {
+	apiConfig := config.GetAPIConfig()
 	router.Use(middleware.CORSMiddleware())
 	router.Use(middleware.OpenTelemetryMiddleware())
-	router.GET("/users", di.DiUser(db).Users)
+	version := "/" + apiConfig.ApiVersion
+	v1 := router.Group(version)
+	v1.GET("/users", di.DiUser(db).Users)
 }

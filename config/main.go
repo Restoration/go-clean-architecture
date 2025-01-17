@@ -15,8 +15,9 @@ type Config struct {
 }
 
 type API struct {
-	Port int    `envconfig:"PORT" required:"true"`
-	Host string `envconfig:"HOST_URL" required:"true"`
+	ApiVersion string `envconfig:"API_VERSION" required:"true"`
+	Port       int    `envconfig:"PORT" required:"true"`
+	Host       string `envconfig:"HOST_URL" required:"true"`
 }
 
 type DB struct {
