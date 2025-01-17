@@ -10,6 +10,6 @@ import (
 
 func App(router *gin.Engine, db *gorm.DB) {
 	router.Use(middleware.CORSMiddleware())
-
+	router.Use(middleware.OpenTelemetryMiddleware())
 	router.GET("/users", di.DiUser(db).Users)
 }
