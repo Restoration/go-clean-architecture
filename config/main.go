@@ -10,7 +10,13 @@ import (
 )
 
 type Config struct {
-	DB *DB
+	API *API
+	DB  *DB
+}
+
+type API struct {
+	Port int    `envconfig:"PORT" required:"true"`
+	Host string `envconfig:"HOST_URL" required:"true"`
 }
 
 type DB struct {
@@ -41,6 +47,10 @@ func Load(filePath string) error {
 		return err
 	}
 	return nil
+}
+
+func GetAPIConfig() *API {
+	return config.API
 }
 
 func GetDBConfig() *DB {
