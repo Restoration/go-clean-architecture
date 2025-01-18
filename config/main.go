@@ -32,6 +32,22 @@ type DB struct {
 	ConnMaxLifetime int    `envconfig:"DB_CONN_MAX_LIFETIME" default:"255"`
 }
 
+type DB1 struct {
+	Host     string `envconfig:"POSTGRES_HOST_1" required:"true"`
+	Port     int    `envconfig:"POSTGRES_PORT_1" required:"true"`
+	User     string `envconfig:"POSTGRES_USER_1" required:"true"`
+	Password string `envconfig:"POSTGRES_PASSWORD_1" required:"true"`
+	Name     string `envconfig:"POSTGRES_DATABASE_1" required:"true"`
+}
+
+type DB2 struct {
+	Host     string `envconfig:"POSTGRES_HOST_2" required:"true"`
+	Port     int    `envconfig:"POSTGRES_PORT_2" required:"true"`
+	User     string `envconfig:"POSTGRES_USER_2" required:"true"`
+	Password string `envconfig:"POSTGRES_PASSWORD_2" required:"true"`
+	Name     string `envconfig:"POSTGRES_DATABASE_2" required:"true"`
+}
+
 var config Config
 var envPath = fmt.Sprintf("./%s.env", os.Getenv("GO_ENV"))
 
@@ -55,5 +71,13 @@ func GetAPIConfig() *API {
 }
 
 func GetDBConfig() *DB {
+	return config.DB
+}
+
+func GetDB1Config() *DB {
+	return config.DB
+}
+
+func GetDB2Config() *DB {
 	return config.DB
 }

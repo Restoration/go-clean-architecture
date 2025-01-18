@@ -14,8 +14,7 @@ import (
 	"gorm.io/gorm/logger"
 )
 
-func postgresDSN() string {
-	config := config.GetDBConfig()
+func postgresDSN(config *config.DB) string {
 	dsn := fmt.Sprintf("postgres://%s:%s@%s:%s/%s", config.User, config.Password, config.Host, strconv.Itoa(config.Port), config.Name)
 	return dsn
 }
@@ -47,7 +46,10 @@ func setupPostgreSQL(dsn string) (*gorm.DB, error) {
 }
 
 func Initialize() *gorm.DB {
-	conn, err := setupPostgreSQL(postgresDSN())
+	cfg := config.GetDBConfig()
+	// cfg1 := config.GetDB1Config()
+	// cfg2 := config.GetDB2Config()
+	conn, err := setupPostgreSQL(postgresDSN(cfg))
 	if err != nil {
 		panic(err)
 	}
