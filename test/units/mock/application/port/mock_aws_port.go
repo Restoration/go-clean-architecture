@@ -7,7 +7,7 @@ package mock_port
 import (
 	reflect "reflect"
 
-	gomock "github.com/golang/mock/gomock"
+	gomock "go.uber.org/mock/gomock"
 )
 
 // MockAWSPort is a mock of AWSPort interface.

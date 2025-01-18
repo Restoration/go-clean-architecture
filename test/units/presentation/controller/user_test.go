@@ -14,7 +14,7 @@ import (
 
 func TestNewsPost(t *testing.T) {
 
-	envPath := "../../../.env.test"
+	envPath := "../../../../.env.test"
 	ctx, _ := helpers.Initialize(envPath)
 	t.Run("UserController", func(t *testing.T) {
 
@@ -22,10 +22,9 @@ func TestNewsPost(t *testing.T) {
 			ctrl := gomock.NewController(t)
 			defer ctrl.Finish()
 
-			usecase := mock_usecase.NewMockUserUseCase(ctrl)
-			usecase.EXPECT().FindAll(ctx).Return(domain.User{}, nil)
-
-			c := controller.NewUserController(usecase)
+			uc := mock_usecase.NewMockUserUseCase(ctrl)
+			uc.EXPECT().FindAll(ctx).Return(domain.Users{}, nil)
+			c := controller.NewUserController(uc)
 
 			c.Users(ctx)
 			assert.Equal(t, nil, nil)

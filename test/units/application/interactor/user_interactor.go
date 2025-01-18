@@ -4,18 +4,18 @@ import (
 	"go-clean-app/application/interactor"
 	"go-clean-app/domain"
 	"go-clean-app/test/helpers"
+	mock_port "go-clean-app/test/units/mock/application/port"
 	"log"
 	"testing"
 	"time"
 
 	"github.com/go-playground/assert/v2"
-	"github.com/stretchr/testify/assert"
 	"go.uber.org/mock/gomock"
 )
 
 func TestUser(t *testing.T) {
 
-	envPath := "../../../.env.test"
+	envPath := "../../../../.env.test"
 	ctx, db := helpers.Initialize(envPath)
 
 	t.Run("UserInteractor", func(t *testing.T) {
@@ -27,9 +27,9 @@ func TestUser(t *testing.T) {
 
 		t.Run("FindAll_正常に処理が終了すること", func(t *testing.T) {
 
-			userPort.EXPECT().Users(ctx).Return(
+			userPort.EXPECT().FindAll(ctx, db).Return(
 				&domain.Users{
-					&domain.User{
+					domain.User{
 						ID:        1,
 						Name:      "test",
 						ImageURL:  nil,

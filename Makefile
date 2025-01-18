@@ -38,7 +38,8 @@ seed_reset:
 
 
 unit_test:
-	$(CMD_TEST) go test -v ./test/e2e
+	$(CMD_TEST) go test -v ./test/units/application/interactor
+	$(CMD_TEST) go test -v ./test/units/presentation/controller
 
 e2e_test:
 	$(CMD_TEST) goose -allow-missing -dir infrastructure/db/migrations postgres up
