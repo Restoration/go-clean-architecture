@@ -10,9 +10,9 @@ import (
 	"gorm.io/gorm"
 )
 
-func UnitInitialize() (*gin.Context, *gorm.DB) {
+func Initialize(envPath string) (*gin.Context, *gorm.DB) {
 	ctx, _ := gin.CreateTestContext(httptest.NewRecorder())
-	err := config.Load("../../../.env.test")
+	err := config.Load(envPath)
 	if err != nil {
 		log.Fatalf("Failed to load config: %v\n", err)
 		return nil, nil

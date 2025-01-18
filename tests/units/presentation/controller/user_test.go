@@ -14,7 +14,8 @@ import (
 
 func TestNewsPost(t *testing.T) {
 
-	ctx, _ := helpers.UnitInitialize()
+	envPath := "../../../.env.test"
+	ctx, _ := helpers.Initialize(envPath)
 	t.Run("UserController", func(t *testing.T) {
 
 		t.Run("正常にControllerが終了すること", func(t *testing.T) {
