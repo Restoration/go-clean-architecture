@@ -30,10 +30,10 @@ func CORSMiddleware() gin.HandlerFunc {
 		},
 		AllowCredentials: true,
 		AllowOrigins: []string{
-			config.Host,
+			config.HostURL,
 		},
 		AllowOriginFunc: func(origin string) bool {
-			return origin == config.Host
+			return origin == config.HostURL
 		},
 		MaxAge: 24 * time.Hour,
 	})
