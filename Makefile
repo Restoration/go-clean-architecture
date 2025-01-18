@@ -2,10 +2,12 @@ ifneq (,$(wildcard ./.env))
 	include ./.env
 endif
 
+TEST_POSTGRES_DATABASE = "test"
+
 DSN=host=$(POSTGRES_HOST) user=$(POSTGRES_USER) password=$(POSTGRES_PASSWORD) dbname=$(POSTGRES_DATABASE) port=$(POSTGRES_PORT) sslmode=disable
 CMD=docker-compose exec -e GOOSE_DBSTRING="$(DSN)" app
 
-TEST_DSN=host=$(POSTGRES_HOST) user=$(POSTGRES_USER) password=$(POSTGRES_PASSWORD) dbname=$(POSTGRES_DATABASE) port=$(POSTGRES_PORT) sslmode=disable
+TEST_DSN=host=$(POSTGRES_HOST) user=$(POSTGRES_USER) password=$(POSTGRES_PASSWORD) dbname=$(TEST_POSTGRES_DATABASE) port=$(POSTGRES_PORT) sslmode=disable
 CMD_TEST=docker-compose exec -e GOOSE_DBSTRING="$(TEST_DSN)" app
 
 .PHONY: init
@@ -35,9 +37,12 @@ seed_reset:
 	$(CMD) goose -dir infrastructure/db/seeds -table goose_seed_version postgres reset
 
 
-test_e2e:
-	$(CMD_TEST) goose -allow-missing -dir db/migrations postgres up
-	$(CMD_TEST) goose -dir db/seeds -table goose_seed_version postgres up
-	$(CMD_TEST) go test -v ./tests/e2e
+unit_test:
+	$(CMD_TEST) go test -v ./test/e2e
+
+e2e_test:
+	$(CMD_TEST) goose -allow-missing -dir infrastructure/db/migrations postgres up
+	$(CMD_TEST) goose -dir infrastructure/db/seeds -table goose_seed_version postgres up
+	$(CMD_TEST) go test -v ./test/e2e
 	$(CMD_TEST) goose -dir infrastructure/db/seeds -table goose_seed_version postgres reset
 	$(CMD_TEST) goose -dir infrastructure/db/migrations postgres reset

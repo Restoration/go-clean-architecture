@@ -5,6 +5,7 @@ import (
 	"testing"
 
 	"go-clean-app/config"
+	"go-clean-app/test/helpers"
 
 	"github.com/gavv/httpexpect/v2"
 	"github.com/stretchr/testify/suite"
@@ -23,14 +24,14 @@ func (s *UserSuite) SetupTest() {}
 func (s *UserSuite) TearDownTest() {}
 
 func TestUser(t *testing.T) {
-
+	helpers.Initialize("../../.env.test")
 	apiConfig := config.GetAPIConfig()
 	hostURL := apiConfig.HostURL
 	version := apiConfig.ApiVersion
 	url := hostURL + "/" + version
 	e := httpexpect.Default(t, url)
 	t.Run("すべてのユーザー一覧を取得できる", func(t *testing.T) {
-		res := e.POST("/users").
+		res := e.GET("/users").
 			Expect().
 			Status(http.StatusOK).
 			JSON().

@@ -5,8 +5,8 @@ import (
 
 	"go-clean-app/domain"
 	"go-clean-app/presentation/controller"
-	"go-clean-app/tests/helpers"
-	mock_usecase "go-clean-app/tests/units/mock/application/usecase"
+	"go-clean-app/test/helpers"
+	mock_usecase "go-clean-app/test/units/mock/application/usecase"
 
 	"github.com/stretchr/testify/assert"
 	"go.uber.org/mock/gomock"

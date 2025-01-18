@@ -79,5 +79,6 @@ go.work.sum
 
 # env file
 .env
+!.env.test
 
 tmp
