@@ -31,9 +31,19 @@ make e2e_test:
 ctx, _ := helpers.Initialize(envPath)
 ```
 
+TODO：Unitテストにおいてデータの永続化処理のテストコードを実装   
+E2EテストでカバーしているのでひとまずはOKとしている。
+
+controllerで入出力のテストを実行  
+interactorでアプリケーションのコアロジックのテストを実行  
+E2Eで総合的なテストを実施するという流れで行なっている。
+
 
 ## モック
 
+mockgenを利用してモックを作成
+
+実行例
 ```sh
 mockgen -source application/port/user_port.go -destination test/units/mock/application/port/mock_user_port.go
 ```

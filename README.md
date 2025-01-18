@@ -15,6 +15,7 @@ Go 言語によるRESTFul APIの実装。
 
 - [クリーンアーキテクチャ](https://github.com/Restoration/go-clean-architecture/blob/main/docs/clean_architecture.md)
 - [分散トレーシング](https://github.com/Restoration/go-clean-architecture/blob/main/docs/distributed_tracing.md)
+- [Unitテスト＆E2Eテスト](https://github.com/Restoration/go-clean-architecture/blob/main/docs/tests.md)
 
 
 ## 立ち上げ方法
