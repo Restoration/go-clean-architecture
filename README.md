@@ -2,21 +2,19 @@
 
 ## 概要
 
-Go 言語によるRESTFul APIの実装。
-使用技術は以下
-
-- DDD(クリーンアーキテクチャ)
-- 分散トレーシング
-- ユニットテスト
-- E2Eテスト
-
-
-実装の詳細については以下
+Go 言語によるRESTFul APIの実装。  
+  
+使用技術  
+実装詳細はリンクを参照
 
 - [クリーンアーキテクチャ](https://github.com/Restoration/go-clean-architecture/blob/main/docs/clean_architecture.md)
 - [分散トレーシング](https://github.com/Restoration/go-clean-architecture/blob/main/docs/distributed_tracing.md)
 - [Unitテスト＆E2Eテスト](https://github.com/Restoration/go-clean-architecture/blob/main/docs/tests.md)
 
+TODO
+- データベースシャーディング
+- 負荷テスト
+- 並列処理
 
 ## 立ち上げ方法
 
