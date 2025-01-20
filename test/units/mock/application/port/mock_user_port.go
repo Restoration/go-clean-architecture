@@ -9,7 +9,7 @@ import (
 	reflect "reflect"
 
 	gin "github.com/gin-gonic/gin"
-	gomock"go.uber.org/mock/gomock"
+	gomock "go.uber.org/mock/gomock"
 	gorm "gorm.io/gorm"
 )
 

@@ -12,7 +12,7 @@ import (
 	"go.uber.org/mock/gomock"
 )
 
-func TestNewsPost(t *testing.T) {
+func TestUser(t *testing.T) {
 
 	envPath := "../../../../.env.test"
 	ctx, _ := helpers.Initialize(envPath)
