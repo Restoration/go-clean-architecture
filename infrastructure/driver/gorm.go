@@ -77,28 +77,6 @@ func (sm *ShardingManager) GetDBForUser(userID int) *gorm.DB {
 	return sm.dbShards[shardID]
 }
 
-func (sm *ShardingManager) CloseConnections() error {
-	var closeErrors []error
-	for shardID, db := range sm.dbShards {
-		sqlDB, err := db.DB()
-		if err != nil {
-			closeErrors = append(closeErrors, fmt.Errorf("failed to get sql.DB for shard %d: %w", shardID, err))
-			continue
-		}
-		func(id int, db *gorm.DB) {
-			defer func() {
-				err := sqlDB.Close()
-				if err != nil {
-					closeErrors = append(closeErrors, fmt.Errorf("failed to close connection for shard %d: %w", id, err))
-				}
-			}()
-		}(shardID, db)
-	}
-	if len(closeErrors) > 0 {
-		log.Fatalf("Some errors occurred while closing connections: %v", closeErrors)
-	}
-	return nil
-}
 func (sm *ShardingManager) GetShards() map[int]*gorm.DB {
 	return sm.dbShards
 }

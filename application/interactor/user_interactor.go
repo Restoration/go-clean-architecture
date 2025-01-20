@@ -47,8 +47,13 @@ func (interactor *UserInteractor) FindAll(ctx *gin.Context) (domain.Users, error
 				return
 			}
 			for _, user := range users {
+				// TODO N+1問題
 				url, err := interactor.awsPort.CreatePreSignedURL("testBucket", user.ID)
 				if err != nil {
+					errorsMu.Lock()
+					errors = append(errors, fmt.Errorf("failed to fetch image from s3 %d: %w", user.ID, err))
+					errorsMu.Unlock()
+					return
 				}
 				user.ImageURL = url
 				users = append(users, user)

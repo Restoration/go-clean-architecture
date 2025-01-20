@@ -22,7 +22,17 @@ func main() {
 		log.Fatalf("Failed to load env: %v\n", err)
 	}
 	db := driver.Initialize()
-	db.CloseConnections()
+	defer func() {
+		for _, sqlDB := range db.GetShards() {
+			conn, err := sqlDB.DB()
+			if err != nil {
+				log.Fatalf("connection failed: %v\n", err)
+			}
+			if err := conn.Close(); err != nil {
+				log.Fatalf("error in close database: %v\n", err)
+			}
+		}
+	}()
 
 	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt)
 	defer stop()
