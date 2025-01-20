@@ -10,8 +10,10 @@ import (
 )
 
 type Config struct {
-	API *API
-	DB  *DB
+	API *API `envconfig:"API"`
+	DB  *DB  `envconfig:"DB"`
+	DB1 *DB1 `envconfig:"DB1"`
+	DB2 *DB2 `envconfig:"DB2"`
 }
 
 type API struct {
@@ -74,10 +76,10 @@ func GetDBConfig() *DB {
 	return config.DB
 }
 
-func GetDB1Config() *DB {
-	return config.DB
+func GetDB1Config() *DB1 {
+	return config.DB1
 }
 
-func GetDB2Config() *DB {
-	return config.DB
+func GetDB2Config() *DB2 {
+	return config.DB2
 }

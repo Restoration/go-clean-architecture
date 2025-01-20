@@ -82,11 +82,30 @@ func (sm *ShardingManager) GetShards() map[int]*gorm.DB {
 }
 
 func Initialize() *ShardingManager {
+
+	db1 := config.GetDB1Config()
+	db2 := config.GetDB1Config()
+
 	shardConfigs := map[int]string{
 		1: postgresDSN(config.GetDBConfig()),
-		2: postgresDSN(config.GetDB1Config()),
-		3: postgresDSN(config.GetDB2Config()),
+		2: postgresDSN(&config.DB{
+			User:     db1.User,
+			Password: db1.Password,
+			Host:     db1.Host,
+			Port:     db1.Port,
+			Name:     db1.Name,
+		}),
+		3: postgresDSN(&config.DB{
+			User:     db2.User,
+			Password: db2.Password,
+			Host:     db2.Host,
+			Port:     db2.Port,
+			Name:     db2.Name,
+		}),
 	}
+
+	fmt.Println(shardConfigs)
+
 	shardingManager, err := NewShardingManager(shardConfigs)
 	if err != nil {
 		panic(fmt.Sprintf("failed to initialize sharding manager: %v", err))
