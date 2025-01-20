@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"go-clean-app/config"
+	"go-clean-app/infrastructure/tracer"
 
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
@@ -45,17 +46,71 @@ func setupPostgreSQL(dsn string) (*gorm.DB, error) {
 	return db, nil
 }
 
-func Initialize() *gorm.DB {
-	cfg := config.GetDBConfig()
-	// cfg1 := config.GetDB1Config()
-	// cfg2 := config.GetDB2Config()
-	conn, err := setupPostgreSQL(postgresDSN(cfg))
+type ShardingManager struct {
+	dbShards map[int]*gorm.DB
+}
+
+func NewShardingManager(shardConfigs map[int]string) (*ShardingManager, error) {
+	dbShards := make(map[int]*gorm.DB)
+	for shardID, dsn := range shardConfigs {
+		conn, err := setupPostgreSQL(dsn)
+		if err != nil {
+			panic(err)
+		}
+		if err := conn.Error; err != nil {
+			panic(err)
+		}
+		conn.Logger = logger.Default.LogMode(logger.Silent)
+		dbShards[shardID] = conn
+		tracer.RegisterGORMCallbacks(conn)
+
+	}
+	return &ShardingManager{dbShards: dbShards}, nil
+}
+
+func (sm *ShardingManager) GetShardID(userID int) int {
+	return (userID % len(sm.dbShards)) + 1
+}
+
+func (sm *ShardingManager) GetDBForUser(userID int) *gorm.DB {
+	shardID := sm.GetShardID(userID)
+	return sm.dbShards[shardID]
+}
+
+func (sm *ShardingManager) CloseConnections() error {
+	var closeErrors []error
+	for shardID, db := range sm.dbShards {
+		sqlDB, err := db.DB()
+		if err != nil {
+			closeErrors = append(closeErrors, fmt.Errorf("failed to get sql.DB for shard %d: %w", shardID, err))
+			continue
+		}
+		func(id int, db *gorm.DB) {
+			defer func() {
+				err := sqlDB.Close()
+				if err != nil {
+					closeErrors = append(closeErrors, fmt.Errorf("failed to close connection for shard %d: %w", id, err))
+				} else {
+					log.Fatalf("error in close database: %d\n", id)
+				}
+			}()
+		}(shardID, db)
+	}
+	if len(closeErrors) > 0 {
+		log.Fatalf("Some errors occurred while closing connections: %v", closeErrors)
+	}
+	return nil
+}
+
+func Initialize() *ShardingManager {
+	shardConfigs := map[int]string{
+		1: postgresDSN(config.GetDBConfig()),
+		2: postgresDSN(config.GetDB1Config()),
+		3: postgresDSN(config.GetDB2Config()),
+	}
+	shardingManager, err := NewShardingManager(shardConfigs)
 	if err != nil {
-		panic(err)
+		panic(fmt.Sprintf("failed to initialize sharding manager: %v", err))
 	}
-	if err := conn.Error; err != nil {
-		panic(err)
-	}
-	conn.Logger = logger.Default.LogMode(logger.Silent)
-	return conn
+	return shardingManager
 }

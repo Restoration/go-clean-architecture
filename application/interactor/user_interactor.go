@@ -3,19 +3,19 @@ package interactor
 import (
 	"go-clean-app/application/port"
 	"go-clean-app/domain"
+	"go-clean-app/infrastructure/driver"
 
 	"github.com/gin-gonic/gin"
-	"gorm.io/gorm"
 )
 
 type UserInteractor struct {
-	db       *gorm.DB
+	db       *driver.ShardingManager
 	awsPort  port.AWSPort
 	userPort port.UserPort
 }
 
 func NewUserInteractor(
-	db *gorm.DB,
+	db *driver.ShardingManager,
 	awsPort port.AWSPort,
 	userPort port.UserPort,
 ) *UserInteractor {
@@ -27,7 +27,9 @@ func NewUserInteractor(
 }
 
 func (interactor *UserInteractor) FindAll(ctx *gin.Context) (domain.Users, error) {
-	_users, err := interactor.userPort.FindAll(ctx, interactor.db)
+	shID := interactor.db.GetShardID(1001)
+	db := interactor.db.GetDBForUser(shID)
+	_users, err := interactor.userPort.FindAll(ctx, db)
 	if err != nil {
 		return nil, err
 	}

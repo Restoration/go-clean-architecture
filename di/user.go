@@ -3,19 +3,18 @@ package di
 import (
 	"go-clean-app/application/interactor"
 	"go-clean-app/application/port"
+	"go-clean-app/infrastructure/driver"
 	"go-clean-app/infrastructure/repository"
 	"go-clean-app/presentation/controller"
-
-	"gorm.io/gorm"
 )
 
-func DiUser(db *gorm.DB) *controller.UserController {
+func DiUser(db *driver.ShardingManager) *controller.UserController {
 	return controller.NewUserController(
 		DiUserUseCase(db),
 	)
 }
 
-func DiUserUseCase(db *gorm.DB) *interactor.UserInteractor {
+func DiUserUseCase(db *driver.ShardingManager) *interactor.UserInteractor {
 	return interactor.NewUserInteractor(
 		db,
 		DiAWSGateway(),

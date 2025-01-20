@@ -22,15 +22,7 @@ func main() {
 		log.Fatalf("Failed to load env: %v\n", err)
 	}
 	db := driver.Initialize()
-	defer func() {
-		conn, err := db.DB()
-		if err != nil {
-			log.Fatalf("connection failed: %v\n", err)
-		}
-		if err := conn.Close(); err != nil {
-			log.Fatalf("error in close database: %v\n", err)
-		}
-	}()
+	db.CloseConnections()
 
 	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt)
 	defer stop()
@@ -43,7 +35,6 @@ func main() {
 			log.Fatalf("open telemetry shutdown error: %v\n", err)
 		}
 	}()
-	tracer.RegisterGORMCallbacks(db)
 
 	router.App(r, db)
 	r.Run()

@@ -3,13 +3,13 @@ package router
 import (
 	"go-clean-app/config"
 	"go-clean-app/di"
+	"go-clean-app/infrastructure/driver"
 	"go-clean-app/infrastructure/middleware"
 
 	"github.com/gin-gonic/gin"
-	"gorm.io/gorm"
 )
 
-func App(router *gin.Engine, db *gorm.DB) {
+func App(router *gin.Engine, db *driver.ShardingManager) {
 	apiConfig := config.GetAPIConfig()
 	router.Use(middleware.CORSMiddleware())
 	router.Use(middleware.OpenTelemetryMiddleware())
