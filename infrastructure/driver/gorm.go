@@ -90,8 +90,6 @@ func (sm *ShardingManager) CloseConnections() error {
 				err := sqlDB.Close()
 				if err != nil {
 					closeErrors = append(closeErrors, fmt.Errorf("failed to close connection for shard %d: %w", id, err))
-				} else {
-					log.Fatalf("error in close database: %d\n", id)
 				}
 			}()
 		}(shardID, db)
@@ -100,6 +98,9 @@ func (sm *ShardingManager) CloseConnections() error {
 		log.Fatalf("Some errors occurred while closing connections: %v", closeErrors)
 	}
 	return nil
+}
+func (sm *ShardingManager) GetShards() map[int]*gorm.DB {
+	return sm.dbShards
 }
 
 func Initialize() *ShardingManager {
