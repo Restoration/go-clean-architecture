@@ -16,4 +16,5 @@ func App(router *gin.Engine, db *driver.ShardingManager) {
 	version := "/" + apiConfig.ApiVersion
 	v1 := router.Group(version)
 	v1.GET("/users", di.DiUser(db).Users)
+	v1.GET("/user:id", di.DiUser(db).FindByID)
 }

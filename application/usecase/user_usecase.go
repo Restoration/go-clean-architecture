@@ -8,4 +8,5 @@ import (
 
 type UserUseCase interface {
 	FindAll(ctx *gin.Context) (domain.Users, error)
+	FindByID(ctx *gin.Context, id int) (*domain.User, error)
 }

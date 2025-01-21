@@ -15,3 +15,12 @@ func Users(ctx *gin.Context, users domain.Users, err error) {
 		"users": users,
 	})
 }
+
+func User(ctx *gin.Context, user *domain.User, err error) {
+	if err != nil {
+		Error(ctx, http.StatusInternalServerError, err)
+	}
+	ctx.JSON(http.StatusOK, gin.H{
+		"user": user,
+	})
+}

@@ -9,4 +9,5 @@ import (
 
 type UserPort interface {
 	FindAll(ctx *gin.Context, db *gorm.DB) (domain.Users, error)
+	FindByID(ctx *gin.Context, db *gorm.DB, id int) (*domain.User, error)
 }

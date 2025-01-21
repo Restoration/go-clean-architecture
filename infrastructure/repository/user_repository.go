@@ -26,3 +26,16 @@ func (repo *UserRepository) FindAll(ctx *gin.Context, db *gorm.DB) (domain.Users
 	}
 	return entity, nil
 }
+
+func (repo *UserRepository) FindByID(ctx *gin.Context, db *gorm.DB, id int) (*domain.User, error) {
+	var daoUser dao.User
+	err := db.Model(dao.User{ID: id}).Find(&daoUser).Error
+	if err != nil {
+		return nil, err
+	}
+	entity, err := daoUser.ToEntity()
+	if err != nil {
+		return nil, err
+	}
+	return entity, nil
+}

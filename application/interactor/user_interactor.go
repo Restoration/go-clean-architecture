@@ -48,3 +48,12 @@ func (interactor *UserInteractor) FindAll(ctx *gin.Context) (domain.Users, error
 	}
 	return allUsers, nil
 }
+
+func (interactor *UserInteractor) FindByID(ctx *gin.Context, id int) (*domain.User, error) {
+	db := interactor.db.GetDBForUser(id)
+	user, err := interactor.userPort.FindByID(ctx, db, id)
+	if err != nil {
+		return nil, err
+	}
+	return user, nil
+}
