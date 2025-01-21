@@ -5,10 +5,8 @@ import (
 	"go-clean-app/application/port"
 	"go-clean-app/domain"
 	"go-clean-app/infrastructure/driver"
-	"sync"
 
 	"github.com/gin-gonic/gin"
-	"gorm.io/gorm"
 )
 
 type UserInteractor struct {
@@ -31,41 +29,22 @@ func NewUserInteractor(
 
 func (interactor *UserInteractor) FindAll(ctx *gin.Context) (domain.Users, error) {
 	var allUsers domain.Users
-	var mu sync.Mutex
-	var wg sync.WaitGroup
-	var errors []error
-	var errorsMu sync.Mutex
-	for shardID, db := range interactor.db.GetShards() {
-		wg.Add(1)
-		go func(id int, db *gorm.DB) {
-			defer wg.Done()
-			users, err := interactor.userPort.FindAll(ctx, db)
+	for _, db := range interactor.db.GetShards() {
+		users, err := interactor.userPort.FindAll(ctx, db)
+		if err != nil {
+			return nil, err
+		}
+		for i := range users {
+			// TODO N+1問題
+			// UserIDsを渡して一括で取得する作りが理想
+			url, err := interactor.awsPort.CreatePreSignedURL("testBucket", users[i].ID)
 			if err != nil {
-				errorsMu.Lock()
-				errors = append(errors, fmt.Errorf("failed to fetch users from shard %d: %w", id, err))
-				errorsMu.Unlock()
-				return
+				return nil, err
 			}
-			for _, user := range users {
-				// TODO N+1問題
-				url, err := interactor.awsPort.CreatePreSignedURL("testBucket", user.ID)
-				if err != nil {
-					errorsMu.Lock()
-					errors = append(errors, fmt.Errorf("failed to fetch image from s3 %d: %w", user.ID, err))
-					errorsMu.Unlock()
-					return
-				}
-				user.ImageURL = url
-				users = append(users, user)
-			}
-			mu.Lock()
-			allUsers = append(allUsers, users...)
-			mu.Unlock()
-		}(shardID, db)
-	}
-	wg.Wait()
-	if len(errors) > 0 {
-		return nil, fmt.Errorf("errors occurred: %v", errors)
+			users[i].ImageURL = url
+		}
+		fmt.Println(db)
+		allUsers = append(allUsers, users...)
 	}
 	return allUsers, nil
 }

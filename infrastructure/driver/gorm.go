@@ -15,8 +15,13 @@ import (
 	"gorm.io/gorm/logger"
 )
 
-func postgresDSN(config *config.DB) string {
-	dsn := fmt.Sprintf("postgres://%s:%s@%s:%s/%s", config.User, config.Password, config.Host, strconv.Itoa(config.Port), config.Name)
+//	func postgresDSN(config *config.DB) string {
+//		dsn := fmt.Sprintf("postgres://%s:%s@%s:%s/%s", config.User, config.Password, config.Host, strconv.Itoa(config.Port), config.Name)
+//		return dsn
+//	}
+
+func postgresDSN(user, password, host, port, dbName string) string {
+	dsn := fmt.Sprintf("postgres://%s:%s@%s:%s/%s", user, password, host, port, dbName)
 	return dsn
 }
 
@@ -82,30 +87,14 @@ func (sm *ShardingManager) GetShards() map[int]*gorm.DB {
 }
 
 func Initialize() *ShardingManager {
-
-	db1 := config.GetDB1Config()
-	db2 := config.GetDB1Config()
-
+	cfg := config.GetDBConfig()
+	cfg1 := config.GetDB1Config()
+	cfg2 := config.GetDB2Config()
 	shardConfigs := map[int]string{
-		1: postgresDSN(config.GetDBConfig()),
-		2: postgresDSN(&config.DB{
-			User:     db1.User,
-			Password: db1.Password,
-			Host:     db1.Host,
-			Port:     db1.Port,
-			Name:     db1.Name,
-		}),
-		3: postgresDSN(&config.DB{
-			User:     db2.User,
-			Password: db2.Password,
-			Host:     db2.Host,
-			Port:     db2.Port,
-			Name:     db2.Name,
-		}),
+		1: postgresDSN(cfg.User, cfg.Password, cfg.Host, strconv.Itoa(cfg.Port), cfg.Name),
+		2: postgresDSN(cfg1.User, cfg1.Password, cfg1.Host, strconv.Itoa(cfg1.Port), cfg1.Name),
+		3: postgresDSN(cfg2.User, cfg2.Password, cfg2.Host, strconv.Itoa(cfg2.Port), cfg2.Name),
 	}
-
-	fmt.Println(shardConfigs)
-
 	shardingManager, err := NewShardingManager(shardConfigs)
 	if err != nil {
 		panic(fmt.Sprintf("failed to initialize sharding manager: %v", err))
