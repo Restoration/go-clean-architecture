@@ -46,4 +46,6 @@ mockgenを利用してモックを作成
 実行例
 ```sh
 mockgen -source application/port/user_port.go -destination test/units/mock/application/port/mock_user_port.go
+
+mockgen -source application/usecase/user_usecase.go -destination test/units/mock/application/usecase/mock_user_usecase.go
 ```

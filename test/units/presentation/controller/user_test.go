@@ -9,7 +9,7 @@ import (
 	mock_usecase "go-clean-app/test/units/mock/application/usecase"
 
 	"github.com/stretchr/testify/assert"
-	"go.uber.org/mock/gomock"
+	gomock "go.uber.org/mock/gomock"
 )
 
 func TestUser(t *testing.T) {
